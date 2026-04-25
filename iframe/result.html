@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hans">
+	<head>
+		<title>替换结果</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="/iframe/style/result.css" />
+		<script src="/iframe/result.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body>
+		<div id="header">
+			<div id="summary">
+				<span class="badge total">总计: <b id="totalCount">0</b></span>
+				<span class="badge success">成功: <b id="successCount">0</b></span>
+				<span class="badge failed">失败: <b id="failedCount">0</b></span>
+				<span id="modeBadge" class="badge mode"></span>
+			</div>
+			<div id="controls">
+				<input id="searchInput" type="search" placeholder="搜索位号 / 器件 / 属性..." />
+				<select id="filterStatus">
+					<option value="all">全部</option>
+					<option value="success">仅成功</option>
+					<option value="failed">仅失败</option>
+				</select>
+				<button id="exportBtn">导出 CSV</button>
+				<button id="closeBtn">关闭</button>
+			</div>
+		</div>
+		<div id="tableWrap">
+			<table id="resultTable">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>位号</th>
+						<th>子件名</th>
+						<th>状态</th>
+						<th>基准属性</th>
+						<th>原理图值</th>
+						<th>查询属性</th>
+						<th>库中值</th>
+						<th>匹配库器件</th>
+						<th>变更属性</th>
+					</tr>
+				</thead>
+				<tbody id="resultBody"></tbody>
+			</table>
+			<div id="emptyHint" class="hidden">暂无数据</div>
+		</div>
+
+		<div id="deviceModal" class="modal hidden">
+			<div class="modal-backdrop" id="deviceModalBackdrop"></div>
+			<div class="modal-panel">
+				<div class="modal-header">
+					<h3 id="deviceModalTitle">器件详情</h3>
+					<button id="deviceModalClose" class="modal-close">×</button>
+				</div>
+				<div class="modal-body">
+					<pre id="deviceModalContent"></pre>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

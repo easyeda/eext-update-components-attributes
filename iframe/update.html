@@ -43,8 +43,18 @@
 		</div>
 		<p>提示: 仅支持搜索匹配器件的"器件名","料号","制造商编号","值","供应商编号","元件编码"属性</p>
 		<p>警告: 这个操作会把所有元器件查询一次进行删旧放新操作，建议操作前先备份工程</p>
+		<div id="progressPanel" class="hidden">
+			<div id="progressText">准备开始</div>
+			<div id="progressBarTrack"><div id="progressBar"></div></div>
+			<div id="progressStats">
+				<span>总计: <b id="totalCount">0</b></span>
+				<span>成功: <b id="successCount">0</b></span>
+				<span>失败: <b id="failedCount">0</b></span>
+			</div>
+		</div>
 		<div id="Choose">
 			<button id="startbutton">更新</button>
+			<button id="resultbutton" disabled>查看结果</button>
 			<button id="closebutton">取消</button>
 		</div>
 	</body>

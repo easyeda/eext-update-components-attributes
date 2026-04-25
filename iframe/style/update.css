@@ -1,9 +1,9 @@
 body {
-  text-align: left;
-  max-width: 470px;
-  margin: 0 auto;
-  padding: 16px;
-  font-family: sans-serif;
+	text-align: left;
+	max-width: 470px;
+	margin: 0 auto;
+	padding: 16px;
+	font-family: sans-serif;
 }
 
 /* 所有选项容器 */
@@ -11,10 +11,10 @@ body {
 #value,
 #value2,
 #library {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  /* 移除 gap，改用 p 的 margin-right 更可控 */
+	display: flex;
+	align-items: center;
+	margin-bottom: 12px;
+	/* 移除 gap，改用 p 的 margin-right 更可控 */
 }
 
 /* 固定左侧文字宽度 */
@@ -22,13 +22,13 @@ body {
 #value p,
 #value2 p,
 #library p {
-  margin: 0;
-  margin-right: 12px; /* 代替 gap */
-  white-space: nowrap;
-  width: 190px; /* 👈 根据最长文字设定固定宽度 */
-  text-align: left; 
-  overflow: hidden;
-  text-overflow: ellipsis;
+	margin: 0;
+	margin-right: 12px; /* 代替 gap */
+	white-space: nowrap;
+	width: 190px; /* 👈 根据最长文字设定固定宽度 */
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* 下拉框样式 */
@@ -36,38 +36,87 @@ body {
 #value select,
 #value2 select,
 #library select {
-  width: 200px; /* 固定宽度 */
-  max-height: 30px;
-  padding: 4px;
-  font-size: 14px;
-  box-sizing: border-box; /* 👈 确保 padding 不撑大总宽 */
+	width: 200px; /* 固定宽度 */
+	max-height: 30px;
+	padding: 4px;
+	font-size: 14px;
+	box-sizing: border-box; /* 👈 确保 padding 不撑大总宽 */
 }
 
 #Choose {
-  display: flex;
-  gap: 16px; /* 按钮之间的间距 */
-  justify-content: end; /* 水平居右*/
-  margin-top: 20px;
+	display: flex;
+	gap: 16px; /* 按钮之间的间距 */
+	justify-content: end; /* 水平居右*/
+	margin-top: 20px;
 }
 
 #Choose button {
-  padding: 10px 24px;       /* 变大：上下10px，左右24px */
-  font-size: 16px;          /* 字体稍大 */
-  border: none;
-  border-radius: 6px;       /* 圆角边框 */
-  cursor: pointer;
-  transition: opacity 0.2s; /* 可选：悬停反馈 */
+	padding: 10px 24px; /* 变大：上下10px，左右24px */
+	font-size: 16px; /* 字体稍大 */
+	border: none;
+	border-radius: 6px; /* 圆角边框 */
+	cursor: pointer;
+	transition: opacity 0.2s; /* 可选：悬停反馈 */
 }
 
 /* 更新按钮：蓝色背景 + 白色文字 */
 #Choose button:first-child {
-  background-color: #1890ff; 
-  color: white;
+	background-color: #1890ff;
+	color: white;
 }
 
-
 #Choose button:last-child {
-  background-color: white;
-  color: black;
-  border: 1px solid #d9d9d9; 
+	background-color: white;
+	color: black;
+	border: 1px solid #d9d9d9;
+}
+
+#progressPanel {
+	margin-top: 16px;
+	padding: 10px 12px;
+	background: #f5f7fa;
+	border: 1px solid #e0e4eb;
+	border-radius: 6px;
+}
+#progressPanel.hidden {
+	display: none;
+}
+#progressText {
+	font-size: 13px;
+	color: #333;
+	margin-bottom: 6px;
+	word-break: break-all;
+}
+#progressBarTrack {
+	width: 100%;
+	height: 8px;
+	background: #e6eaf0;
+	border-radius: 4px;
+	overflow: hidden;
+}
+#progressBar {
+	width: 0%;
+	height: 100%;
+	background: linear-gradient(90deg, #1890ff, #52c41a);
+	transition: width 0.2s ease;
+}
+#progressStats {
+	display: flex;
+	gap: 12px;
+	font-size: 12px;
+	color: #555;
+	margin-top: 6px;
+}
+#progressStats b {
+	color: #111;
+}
+
+#Choose button#resultbutton {
+	background-color: #fff;
+	color: #1890ff;
+	border: 1px solid #1890ff;
+}
+#Choose button#resultbutton:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }

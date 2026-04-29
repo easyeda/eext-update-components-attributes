@@ -119,7 +119,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 		TEMP_DEVICES_ARRAY.push(...keys);
 		i++;
 	}
-	const DEVICE_INFO_ARRAY = [...new Set(TEMP_DEVICES_ARRAY)];
+	// 过滤掉封装相关的属性,防止修改封装
+	const FOOTPRINT_KEYS = ['Footprint', 'footprint', 'Package', 'package'];
+	const DEVICE_INFO_ARRAY = [...new Set(TEMP_DEVICES_ARRAY)].filter((key) => !FOOTPRINT_KEYS.includes(key));
 	DEVICE_INFO_ARRAY.forEach((key) => {
 		const option = document.createElement('option');
 		option.value = key;

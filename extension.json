@@ -1,51 +1,56 @@
 {
-	"name": "eext-update-components-attributes",
-	"uuid": "dca46d06c6bb44cf81c6657c38058e36",
-	"displayName": "元件属性刷新",
-	"description": "可以通过原理图的元器件属性参数，查找指定库归属的器件信息，再批量更新到原理图，支持仅更新刷新参数或通过器件删旧放新替换元件",
-	"version": "2.4.2",
-	"publisher": "JLCEDA",
-	"engines": {
-		"eda": "^2.2.45"
-	},
-	"license": "Apache-2.0",
-	"repository": {
-		"type": "extension-store",
-		"url": ""
-	},
-	"categories": "Other",
-	"keywords": ["SDK"],
-	"images": {
-		"logo": "./images/logo.png"
-	},
-	"homepage": "https://github.com/easyeda/eext-update-components-attributes",
-	"bugs": "https://github.com/easyeda/eext-update-components-attributes/issues",
-	"activationEvents": {},
-	"entry": "./dist/index",
-	"dependentExtensions": {},
-	"headerMenus": {
-		"sch": [
-			{
-				"id": "update",
-				"title": "元件属性刷新",
-				"menuItems": [
-					{
-						"id": "updateAttributes",
-						"title": "通过刷新器件属性更新...",
-						"registerFn": "updateAttributes"
-					},
-					{
-						"id": "deleteAndPlaceNew",
-						"title": "通过元件删旧放新更新...",
-						"registerFn": "deleteAndPlaceNew"
-					},
-					{
-						"id": "debug",
-						"title": "调试...",
-						"registerFn": "debug"
-					}
-				]
-			}
-		]
-	}
+  "name": "eext-update-components-attributes",
+  "uuid": "dca46d06c6bb44cf81c6657c38058e36",
+  "displayName": "元件属性刷新",
+  "description": "可以通过原理图的元器件属性参数，查找指定库归属的器件信息，再批量更新到原理图，支持仅更新刷新参数或通过器件删旧放新替换元件",
+  "version": "2.4.2",
+  "publisher": "EasyEDA",
+  "engines": {
+    "eda": "^2.2.45"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/easyeda/eext-update-components-attributes"
+  },
+  "categories": "Schematic",
+  "keywords": [
+    "components",
+    "attributes",
+    "update",
+    "library"
+  ],
+  "images": {
+    "logo": "./images/logo.png"
+  },
+  "homepage": "https://github.com/easyeda",
+  "bugs": "https://github.com/easyeda/eext-update-components-attributes/issues",
+  "activationEvents": {},
+  "entry": "./dist/index",
+  "dependentExtensions": {},
+  "headerMenus": {
+    "sch": [
+      {
+        "id": "update",
+        "title": "元件属性刷新",
+        "menuItems": [
+          {
+            "id": "updateAttributes",
+            "title": "通过刷新器件属性更新...",
+            "registerFn": "updateAttributes"
+          },
+          {
+            "id": "deleteAndPlaceNew",
+            "title": "通过元件删旧放新更新...",
+            "registerFn": "deleteAndPlaceNew"
+          },
+          {
+            "id": "debug",
+            "title": "调试...",
+            "registerFn": "debug"
+          }
+        ]
+      }
+    ]
+  }
 }

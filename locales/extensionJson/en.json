@@ -1,3 +1,12 @@
 {
-	"About...": "About..."
+	"About...": "About...",
+	"Component Attributes Refresh": "Component Attributes Refresh",
+	"Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones": "Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones",
+	"Update via Refresh Attributes...": "Update via Refresh Attributes...",
+	"Update via Delete and Replace...": "Update via Delete and Replace...",
+	"Debug...": "Debug...",
+	"components": "components",
+	"attributes": "attributes",
+	"update": "update",
+	"library": "library"
 }

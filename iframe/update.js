@@ -3,6 +3,14 @@ function escapeHtml(unsafe) {
 	return unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
+if (typeof t !== 'function') {
+	var edaObj = (typeof eda !== 'undefined') ? eda : (window.parent && window.parent.eda);
+	function t(tag, ...args) {
+		if (edaObj && edaObj.sys_I18n) return edaObj.sys_I18n.text(tag, undefined, undefined, ...args);
+		return tag;
+	}
+}
+
 async function CloseIFrame() {
 	await eda.sys_IFrame.closeIFrame();
 }
@@ -83,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		if (!PROGRESS_PANEL) return;
 		const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 		PROGRESS_BAR.style.width = pct + '%';
-		PROGRESS_TEXT.textContent = label || `处理中 ${done}/${total} (${pct}%)`;
+		PROGRESS_TEXT.textContent = label || t('Progress_Processing', done, total, pct);
 		TOTAL_COUNT_EL.textContent = total;
 		SUCCESS_COUNT_EL.textContent = success;
 		FAILED_COUNT_EL.textContent = failed;
@@ -92,15 +100,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 		try {
 			await eda.sys_IFrame.openIFrame('/iframe/result.html', 1200, 700, 'eext-replace-result');
 		} catch (e) {
-			console.error('打开结果窗口失败', e);
-			await eda.sys_Message.showToastMessage('打开结果窗口失败: ' + e.message, 'error');
+			console.error(t('Msg_OpenResultFailed'), e);
+			await eda.sys_Message.showToastMessage(t('Msg_OpenResultFailed') + e.message, 'error');
 		}
 	}
 	function persistResults(payload) {
 		try {
 			localStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(payload));
 		} catch (e) {
-			console.error('保存结果数据失败', e);
+			console.error(t('Msg_OpenResultFailed'), e);
 		}
 	}
 
@@ -144,12 +152,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	async function UpdateDeviceInfo(LibUuid) {
 		if (!LibUuid) {
-			await eda.sys_Message.showToastMessage('请选择库', 'error');
+			await eda.sys_Message.showToastMessage(t('Msg_SelectLibrary'), 'error');
 			return;
 		}
 
 		showProgressPanel();
-		PROGRESS_TEXT.textContent = '正在请求库器件列表...';
+		PROGRESS_TEXT.textContent = t('Progress_RequestingLibDevices');
 		PROGRESS_BAR.style.width = '0%';
 		RESULT_BUTTON.disabled = true;
 		START_BUTTON.disabled = true;
@@ -164,15 +172,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 			);
 
 			if (!res.ok) {
-				throw new Error(`API请求失败: ${res.status} ${res.statusText}`);
+				throw new Error(t('Msg_FetchFailed', res.status, res.statusText));
 			}
 
 			const data = await res.json();
 			const currentList = data.result?.lists || [];
 
 			if (currentList.length === 0) {
-				await eda.sys_Message.showToastMessage('所选库中没有器件', 'warning');
-				PROGRESS_TEXT.textContent = '所选库中没有器件';
+				await eda.sys_Message.showToastMessage(t('Progress_NoDevicesInLib'), 'warning');
+				PROGRESS_TEXT.textContent = t('Progress_NoDevicesInLib');
 				return;
 			}
 
@@ -180,8 +188,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 			const queryKey = UPDATE_VALUE.value;
 
 			if (!baseKey || !queryKey) {
-				await eda.sys_Message.showToastMessage('请选择基准属性和查询属性', 'error');
-				PROGRESS_TEXT.textContent = '缺少属性选择';
+				await eda.sys_Message.showToastMessage(t('Progress_MissingAttrSelection'), 'error');
+				PROGRESS_TEXT.textContent = t('Progress_MissingAttrSelection');
 				return;
 			}
 
@@ -197,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 			}
 
 			const total = SCH_DEVICES_INFO.length;
-			updateProgress(0, total, 0, 0, `开始处理，共 ${total} 个器件`);
+			updateProgress(0, total, 0, 0, t('Progress_StartProcessing', total));
 
 			console.log('当前基准属性', baseKey);
 			console.log('当前查询属性', queryKey);
@@ -243,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 						queryKey,
 						libValue: '',
 						matchedDevice: null,
-						failReason: `缺少基准属性 "${baseKey}"`,
+						failReason: t('Msg_NoBaseAttr') + ' "' + baseKey + '"',
 						before,
 						after: {},
 						beforeOther,
@@ -253,8 +261,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 						projectUuid: SCH_INFO.parentProjectUuid,
 					});
 					const link = `<span class="link" data-log-find-id="${convertId(primitiveId)}" data-log-find-sheet="${SCH_INFO.page[0].uuid}" data-log-find-type="rect" data-log-find-path="${SCH_INFO.parentProjectUuid}">${escapeHtml(designator)}</span>`;
-					eda.sys_Log.add(`❌ [失败] ${link}, ${escapeHtml(originalSubPartName)} 缺少基准属性 "${escapeHtml(baseKey)}"`, 'error');
-					updateProgress(done, total, success, failed, `处理 ${done}/${total} - ${designator} 缺少基准属性`);
+					eda.sys_Log.add(`❌ [${t('Log_Failed')}] ${link}, ${escapeHtml(originalSubPartName)} ${t('Log_MissingBaseAttr')} "${escapeHtml(baseKey)}"`, 'error');
+					updateProgress(done, total, success, failed, t('Progress_MissingBaseAttr', done, total, designator));
 					await eda.sys_Message.showToastMessage(`${done}/${total}`, 'info');
 					continue;
 				}
@@ -274,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 						queryKey,
 						libValue: '',
 						matchedDevice: null,
-						failReason: '库中无匹配器件',
+						failReason: t('Msg_NoMatchDevice'),
 						before,
 						after: {},
 						beforeOther,
@@ -284,8 +292,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 						projectUuid: SCH_INFO.parentProjectUuid,
 					});
 					const link = `<span class="link" data-log-find-id="${convertId(primitiveId)}" data-log-find-sheet="${SCH_INFO.page[0].uuid}" data-log-find-type="rect" data-log-find-path="${SCH_INFO.parentProjectUuid}">${escapeHtml(designator)}</span>`;
-					eda.sys_Log.add(`❌ [失败] ${link}, ${escapeHtml(originalSubPartName)} 没有对应的属性`, 'error');
-					updateProgress(done, total, success, failed, `处理 ${done}/${total} - ${designator} 无匹配`);
+					eda.sys_Log.add(`❌ [${t('Log_Failed')}] ${link}, ${escapeHtml(originalSubPartName)} ${t('Log_NoCorrespondingAttr')}`, 'error');
+					updateProgress(done, total, success, failed, t('Progress_NoMatch', done, total, designator));
 					await eda.sys_Message.showToastMessage(`${done}/${total}`, 'info');
 					continue;
 				}
@@ -319,7 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 						queryKey,
 						libValue,
 						matchedDevice: matchedDevice,
-						failReason: '库器件缺少有效的 UUID',
+						failReason: t('Msg_DeviceMissingUUID'),
 						before,
 						after: {},
 						beforeOther,
@@ -329,8 +337,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 						projectUuid: SCH_INFO.parentProjectUuid,
 					});
 					const link = `<span class="link" data-log-find-id="${convertId(primitiveId)}" data-log-find-sheet="${SCH_INFO.page[0].uuid}" data-log-find-type="rect" data-log-find-path="${SCH_INFO.parentProjectUuid}">${escapeHtml(designator)}</span>`;
-					eda.sys_Log.add(`❌ [失败] ${link}, ${escapeHtml(originalSubPartName)} 库器件缺少有效的 UUID`, 'error');
-					updateProgress(done, total, success, failed, `处理 ${done}/${total} - ${designator} 缺少UUID`);
+					eda.sys_Log.add(`❌ [${t('Log_Failed')}] ${link}, ${escapeHtml(originalSubPartName)} ${t('Log_MissingUUID')}`, 'error');
+					updateProgress(done, total, success, failed, t('Progress_MissingUUID', done, total, designator));
 					await eda.sys_Message.showToastMessage(`${done}/${total}`, 'info');
 					continue;
 				}
@@ -424,18 +432,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 					matchedDevice?.partId ||
 					matchedDevice?.title ||
 					newSubPartName ||
-					'未知器件';
+					t('Status_UnknownDevice');
 				const link = `<span class="link" data-log-find-id="${convertId(newPrimitiveId)}" data-log-find-sheet="${SCH_INFO.page[0].uuid}" data-log-find-type="rect" data-log-find-path="${SCH_INFO.parentProjectUuid}">${escapeHtml(designator)}</span>`;
 				eda.sys_Log.add(
-					`✅ [成功] ${link}, ${escapeHtml(newSubPartName)} 已根据查找到的器件 "${escapeHtml(matchedName)}" 进行删旧放新成功`,
+					`✅ [${t('Log_Success')}] ${link}, ${escapeHtml(newSubPartName)} ${t('Log_DeleteReplaceSuccess')} "${escapeHtml(matchedName)}"`,
 					'info',
 				);
-				updateProgress(done, total, success, failed, `处理 ${done}/${total} - ${designator} ✓`);
+				updateProgress(done, total, success, failed, t('Progress_Processing', done, total, Math.round((done / total) * 100)));
 				await eda.sys_Message.showToastMessage(`${done}/${total}`, 'info');
 			}
 
 			const payload = {
-				mode: '删旧放新',
+				mode: 'Label_ModeDeleteReplace',
 				total,
 				success,
 				failed,
@@ -444,18 +452,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 			};
 			persistResults(payload);
 
-			updateProgress(total, total, success, failed, `完成: 成功 ${success} / 失败 ${failed}`);
-			await eda.sys_Message.showToastMessage('元器件替换完成', 'info');
-			await eda.sys_Log.add(`本次任务成功替换器件${success}个，失败${failed}个`, 'info');
+			updateProgress(total, total, success, failed, t('Progress_Completed', success, failed));
+			await eda.sys_Message.showToastMessage(t('Msg_ComponentReplaceDone'), 'info');
+			await eda.sys_Log.add(t('Msg_TaskResult', success, failed), 'info');
 			RESULT_BUTTON.disabled = false;
 			await openResultIFrame();
 		} catch (error) {
-			console.error('更新器件信息时出错:', error);
-			PROGRESS_TEXT.textContent = `失败: ${error.message}`;
-			await eda.sys_Message.showToastMessage(`更新失败: ${error.message}`, 'error');
-			await eda.sys_Log.add(`❌ 更新失败: ${error.message}`, 'error');
+			console.error(t('Msg_UpdateFailed'), error);
+			PROGRESS_TEXT.textContent = t('Msg_UpdateFailed') + error.message;
+			await eda.sys_Message.showToastMessage(t('Msg_UpdateFailed') + error.message, 'error');
+			await eda.sys_Log.add(`❌ ${t('Msg_UpdateFailed')}${error.message}`, 'error');
 			if (rows.length) {
-				persistResults({ mode: '删旧放新(中断)', total: rows.length, success, failed, rows, timestamp: Date.now() });
+				persistResults({ mode: 'Label_ModeDeleteReplaceInterrupted', total: rows.length, success, failed, rows, timestamp: Date.now() });
 				RESULT_BUTTON.disabled = false;
 			}
 		} finally {

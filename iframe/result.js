@@ -1,5 +1,13 @@
 const RESULT_STORAGE_KEY = 'eext_replace_result_v1';
 
+if (typeof t !== 'function') {
+	var edaObj = (typeof eda !== 'undefined') ? eda : (window.parent && window.parent.eda);
+	function t(tag, ...args) {
+		if (edaObj && edaObj.sys_I18n) return edaObj.sys_I18n.text(tag, undefined, undefined, ...args);
+		return tag;
+	}
+}
+
 function escapeHtml(unsafe) {
 	if (unsafe == null) return '';
 	const s = String(unsafe);
@@ -36,9 +44,9 @@ async function locatePrimitive(row) {
 		if (typeof eda !== 'undefined' && eda?.sys_Log?.add) {
 			const convertedId = id.replace(/^\$1I/, 'e');
 			const span = `<span class="link" data-log-find-id="${escapeHtml(convertedId)}" data-log-find-sheet="${escapeHtml(sheet)}" data-log-find-type="rect" data-log-find-path="${escapeHtml(path)}">${escapeHtml(row.designator || id)}</span>`;
-			await eda.sys_Log.add(`🔍 [定位] ${span}`, 'info');
+			await eda.sys_Log.add(`🔍 [${t('Log_Located')}] ${span}`, 'info');
 			if (eda.sys_Message?.showToastMessage) {
-				await eda.sys_Message.showToastMessage('已写入定位日志，请到日志面板点击位号', 'info');
+				await eda.sys_Message.showToastMessage(t('Msg_LocatedLog'), 'info');
 			}
 			return;
 		}
@@ -46,7 +54,7 @@ async function locatePrimitive(row) {
 		console.warn('sys_Log.add 不可用', e);
 	}
 
-	alert('当前环境不支持自动定位，请手动在原理图查找: ' + (row.designator || id));
+	alert(t('Msg_NoAutoLocate') + (row.designator || id));
 }
 
 function deviceLabel(device) {
@@ -59,7 +67,7 @@ function openDeviceModal(device) {
 	const title = document.getElementById('deviceModalTitle');
 	const content = document.getElementById('deviceModalContent');
 	if (!modal || !title || !content) return;
-	title.textContent = `器件详情 - ${deviceLabel(device)}`;
+	title.textContent = `${t('Title_DeviceDetails')} - ${deviceLabel(device)}`;
 	content.textContent = JSON.stringify(device, null, 2);
 	modal.classList.remove('hidden');
 }
@@ -80,10 +88,10 @@ function buildChangedPropsHtml(row) {
 	const changes = [];
 
 	const standardProps = [
-		{ key: 'manufacturer', label: '制造商', b: before.manufacturer, a: after.manufacturer },
-		{ key: 'manufacturerPart', label: '制造商编号', b: before.manufacturerPart, a: after.manufacturerPart },
-		{ key: 'supplier', label: '供应商', b: before.supplier, a: after.supplier },
-		{ key: 'supplierPart', label: '供应商编号', b: before.supplierPart, a: after.supplierPart },
+		{ key: 'manufacturer', label: t('Label_Manufacturer'), b: before.manufacturer, a: after.manufacturer },
+		{ key: 'manufacturerPart', label: t('Label_ManufacturerPart'), b: before.manufacturerPart, a: after.manufacturerPart },
+		{ key: 'supplier', label: t('Label_Supplier'), b: before.supplier, a: after.supplier },
+		{ key: 'supplierPart', label: t('Label_SupplierPart'), b: before.supplierPart, a: after.supplierPart },
 	];
 
 	standardProps.forEach(({ label, b, a }) => {
@@ -110,7 +118,7 @@ function buildChangedPropsHtml(row) {
 	});
 
 	if (changes.length === 0) {
-		return '<span class="no-change">无变更</span>';
+		return `<span class="no-change">${t('Status_NoChange')}</span>`;
 	}
 
 	return `<div class="changes-list">${changes.join('')}</div>`;
@@ -140,12 +148,12 @@ function renderRows(rows, payload) {
 			<td>${idx + 1}</td>
 			<td class="designator-cell">${escapeHtml(row.designator)}</td>
 			<td>${escapeHtml(row.subPartName)}</td>
-			<td><span class="status ${ok ? 'ok' : 'err'}">${ok ? '成功' : '失败'}</span></td>
+			<td><span class="status ${ok ? 'ok' : 'err'}">${ok ? t('Status_Success') : t('Status_Failed')}</span></td>
 			<td>${escapeHtml(row.baseKey)}</td>
 			<td>${escapeHtml(row.schValue)}</td>
 			<td>${escapeHtml(row.queryKey)}</td>
 			<td>${escapeHtml(row.libValue)}</td>
-			<td>${row.matchedDevice ? `<span class="device-link" data-device-idx="${idx}">Device</span>` : escapeHtml(ok ? '-' : row.failReason || '无匹配')}</td>
+			<td>${row.matchedDevice ? `<span class="device-link" data-device-idx="${idx}">Device</span>` : escapeHtml(ok ? '-' : t('Status_NoMatch'))}</td>
 			<td class="changes-cell">${changedPropsHtml}</td>
 		`;
 		frag.appendChild(tr);
@@ -190,15 +198,15 @@ function applyFilter(payload) {
 }
 
 function exportCsv(payload) {
-	const headers = ['#', '位号', '子件名', '状态', '基准属性', '原理图值', '查询属性', '库中值', '匹配库器件', '失败原因', '变更属性'];
+	const headers = ['#', t('Col_Designator'), t('Col_SubPartName'), t('Col_Status'), t('Col_BaseAttr'), t('Col_SchValue'), t('Col_QueryAttr'), t('Col_LibValue'), t('Col_MatchedDevice'), t('CSV_FailReason'), t('Col_ChangedAttr')];
 	const csvLines = [headers.join(',')];
 	payload.rows.forEach((r, i) => {
-		const changesText = r.status === 'success' ? '见详情' : '';
+		const changesText = r.status === 'success' ? t('Label_SeeDetails') : '';
 		const cells = [
 			i + 1,
 			r.designator,
 			r.subPartName,
-			r.status === 'success' ? '成功' : '失败',
+			r.status === 'success' ? t('Status_Success') : t('Status_Failed'),
 			r.baseKey,
 			r.schValue,
 			r.queryKey,
@@ -230,8 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('successCount').textContent = payload.success ?? payload.rows.filter((r) => r.status === 'success').length;
 	document.getElementById('failedCount').textContent = payload.failed ?? payload.rows.filter((r) => r.status !== 'success').length;
 	const modeBadge = document.getElementById('modeBadge');
-	if (payload.mode) modeBadge.textContent = `模式: ${payload.mode}`;
-	else modeBadge.classList.add('hidden');
+	if (payload.mode) {
+		const modeText = t(payload.mode);
+		modeBadge.textContent = `${t('Label_Mode')} ${modeText}`;
+	} else {
+		modeBadge.classList.add('hidden');
+	}
 
 	applyFilter(payload);
 

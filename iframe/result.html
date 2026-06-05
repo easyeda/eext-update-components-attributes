@@ -1,57 +1,64 @@
 <!doctype html>
 <html lang="zh-Hans">
 	<head>
-		<title>替换结果</title>
+		<title id="pageTitle"></title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="/iframe/style/result.css" />
+		<script>
+			var edaObj = (typeof eda !== 'undefined') ? eda : (window.parent && window.parent.eda);
+			function t(tag, ...args) {
+				if (edaObj && edaObj.sys_I18n) return edaObj.sys_I18n.text(tag, undefined, undefined, ...args);
+				return tag;
+			}
+		</script>
 		<script src="/iframe/result.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
 	<body>
 		<div id="header">
 			<div id="summary">
-				<span class="badge total">总计: <b id="totalCount">0</b></span>
-				<span class="badge success">成功: <b id="successCount">0</b></span>
-				<span class="badge failed">失败: <b id="failedCount">0</b></span>
+				<span class="badge total" id="totalBadge"></span>
+				<span class="badge success" id="successBadge"></span>
+				<span class="badge failed" id="failedBadge"></span>
 				<span id="modeBadge" class="badge mode"></span>
 			</div>
 			<div id="controls">
-				<input id="searchInput" type="search" placeholder="搜索位号 / 器件 / 属性..." />
+				<input id="searchInput" type="search" placeholder="" />
 				<select id="filterStatus">
-					<option value="all">全部</option>
-					<option value="success">仅成功</option>
-					<option value="failed">仅失败</option>
+					<option value="all" id="filterAll"></option>
+					<option value="success" id="filterSuccess"></option>
+					<option value="failed" id="filterFailed"></option>
 				</select>
-				<button id="exportBtn">导出 CSV</button>
-				<button id="closeBtn">关闭</button>
+				<button id="exportBtn"></button>
+				<button id="closeBtn"></button>
 			</div>
 		</div>
 		<div id="tableWrap">
 			<table id="resultTable">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>位号</th>
-						<th>子件名</th>
-						<th>状态</th>
-						<th>基准属性</th>
-						<th>原理图值</th>
-						<th>查询属性</th>
-						<th>库中值</th>
-						<th>匹配库器件</th>
-						<th>变更属性</th>
+						<th id="colIndex"></th>
+						<th id="colDesignator"></th>
+						<th id="colSubPartName"></th>
+						<th id="colStatus"></th>
+						<th id="colBaseAttr"></th>
+						<th id="colSchValue"></th>
+						<th id="colQueryAttr"></th>
+						<th id="colLibValue"></th>
+						<th id="colMatchedDevice"></th>
+						<th id="colChangedAttr"></th>
 					</tr>
 				</thead>
 				<tbody id="resultBody"></tbody>
 			</table>
-			<div id="emptyHint" class="hidden">暂无数据</div>
+			<div id="emptyHint" class="hidden"></div>
 		</div>
 
 		<div id="deviceModal" class="modal hidden">
 			<div class="modal-backdrop" id="deviceModalBackdrop"></div>
 			<div class="modal-panel">
 				<div class="modal-header">
-					<h3 id="deviceModalTitle">器件详情</h3>
+					<h3 id="deviceModalTitle"></h3>
 					<button id="deviceModalClose" class="modal-close">×</button>
 				</div>
 				<div class="modal-body">
@@ -59,5 +66,29 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			document.getElementById('pageTitle').textContent = t('Title_ReplaceResults');
+			document.getElementById('totalBadge').innerHTML = t('Label_Total') + ' <b id="totalCount">0</b>';
+			document.getElementById('successBadge').innerHTML = t('Label_Success') + ' <b id="successCount">0</b>';
+			document.getElementById('failedBadge').innerHTML = t('Label_Failed') + ' <b id="failedCount">0</b>';
+			document.getElementById('searchInput').placeholder = t('Placeholder_Search');
+			document.getElementById('filterAll').textContent = t('Filter_All');
+			document.getElementById('filterSuccess').textContent = t('Filter_Success');
+			document.getElementById('filterFailed').textContent = t('Filter_Failed');
+			document.getElementById('exportBtn').textContent = t('Btn_ExportCSV');
+			document.getElementById('closeBtn').textContent = t('Btn_Close');
+			document.getElementById('colIndex').textContent = t('Col_Index');
+			document.getElementById('colDesignator').textContent = t('Col_Designator');
+			document.getElementById('colSubPartName').textContent = t('Col_SubPartName');
+			document.getElementById('colStatus').textContent = t('Col_Status');
+			document.getElementById('colBaseAttr').textContent = t('Col_BaseAttr');
+			document.getElementById('colSchValue').textContent = t('Col_SchValue');
+			document.getElementById('colQueryAttr').textContent = t('Col_QueryAttr');
+			document.getElementById('colLibValue').textContent = t('Col_LibValue');
+			document.getElementById('colMatchedDevice').textContent = t('Col_MatchedDevice');
+			document.getElementById('colChangedAttr').textContent = t('Col_ChangedAttr');
+			document.getElementById('emptyHint').textContent = t('Hint_NoData');
+			document.getElementById('deviceModalTitle').textContent = t('Title_DeviceDetails');
+		</script>
 	</body>
 </html>

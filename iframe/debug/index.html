@@ -3,7 +3,14 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>调试</title>
+		<title id="pageTitle"></title>
+		<script>
+			var edaObj = (typeof eda !== 'undefined') ? eda : (window.parent && window.parent.eda);
+			function t(tag, ...args) {
+				if (edaObj && edaObj.sys_I18n) return edaObj.sys_I18n.text(tag, undefined, undefined, ...args);
+				return tag;
+			}
+		</script>
 		<style>
 			body {
 				font-family: 'Courier New', monospace;
@@ -62,12 +69,15 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>JavaScript 运行器</h1>
+			<h1 id="runnerTitle"></h1>
 			<textarea id="codeInput" autofocus></textarea>
 			<div id="output"></div>
 		</div>
 
 		<script>
+			document.getElementById('pageTitle').textContent = t('Title_Debug');
+			document.getElementById('runnerTitle').textContent = t('Title_JSRunner');
+
 			// 监听键盘事件：Ctrl + Enter 执行代码
 			document.getElementById('codeInput').addEventListener('keydown', function (e) {
 				if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -80,7 +90,7 @@
 			function runCode() {
 				const code = document.getElementById('codeInput').value;
 				const outputDiv = document.getElementById('output');
-				outputDiv.textContent = ''; // 清空上一次输出
+				outputDiv.textContent = '';
 
 				// 拦截 console.log
 				const originalLog = console.log;
@@ -99,13 +109,13 @@
 					if (logs.length > 0) {
 						outputDiv.textContent = logs.join('\n');
 					} else {
-						outputDiv.textContent = '代码执行完成（无输出）。';
+						outputDiv.textContent = t('Msg_CodeExecutedNoOutput');
 					}
 				} catch (error) {
-					outputDiv.textContent = '❌ 错误：' + error.message;
+					outputDiv.textContent = '❌ ' + t('Msg_Error') + error.message;
 					outputDiv.style.color = '#ff6b6b';
 				} finally {
-					console.log = originalLog; // 恢复原始 console.log
+					console.log = originalLog;
 				}
 			}
 

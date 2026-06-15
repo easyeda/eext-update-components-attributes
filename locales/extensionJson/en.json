@@ -1,12 +1,17 @@
 {
 	"About...": "About...",
-	"Component Attributes Refresh": "Component Attributes Refresh",
-	"Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones": "Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones",
-	"Update via Refresh Attributes...": "Update via Refresh Attributes...",
-	"Update via Delete and Replace...": "Update via Delete and Replace...",
-	"Debug...": "Debug...",
-	"components": "components",
 	"attributes": "attributes",
+	"Component Attributes Refresh": "Component Attributes Refresh",
+	"components": "components",
+	"Debug...": "Debug...",
+	"library": "library",
 	"update": "update",
-	"library": "library"
+	"Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones": "Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones",
+	"Update via Delete and Replace...": "Update via Delete and Replace...",
+	"Update via Refresh Attributes...": "Update via Refresh Attributes...",
+	"元件属性刷新": "Component Attribute Refresh",
+	"调试...": "Debug...",
+	"通过元件删旧放新更新...": "Update by Deleting Old and Placing New...",
+	"通过刷新器件属性更新...": "Update by Refreshing Component Attributes...",
+	"可以通过原理图的元器件属性参数，查找指定库归属的器件信息，再批量更新到原理图，支持仅更新刷新参数或通过器件删旧放新替换元件": "Query library component info based on schematic component attributes, and batch update to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones"
 }

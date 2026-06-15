@@ -1,12 +1,16 @@
 {
 	"About...": "关于...",
-	"Component Attributes Refresh": "元件属性刷新",
-	"Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones": "可以通过原理图的元器件属性参数，查找指定库归属的器件信息，再批量更新到原理图，支持仅更新刷新参数或通过器件删旧放新替换元件",
-	"Update via Refresh Attributes...": "通过刷新器件属性更新...",
-	"Update via Delete and Replace...": "通过元件删旧放新更新...",
-	"Debug...": "调试...",
-	"components": "元件",
 	"attributes": "属性",
+	"Component Attributes Refresh": "元件属性刷新",
+	"components": "元件",
+	"Debug...": "调试...",
+	"library": "库",
 	"update": "更新",
-	"library": "库"
+	"Update component attributes by refreshing attribute parameters, querying library component info based on schematic component attributes, and batch updating to schematic. Supports updating refresh parameters only or replacing components by deleting old and placing new ones": "可以通过原理图的元器件属性参数，查找指定库归属的器件信息，再批量更新到原理图，支持仅更新刷新参数或通过器件删旧放新替换元件",
+	"Update via Delete and Replace...": "通过元件删旧放新更新...",
+	"Update via Refresh Attributes...": "通过刷新器件属性更新...",
+	"元件属性刷新": "元件属性刷新",
+	"调试...": "调试...",
+	"通过元件删旧放新更新...": "通过元件删旧放新更新...",
+	"通过刷新器件属性更新...": "通过刷新器件属性更新..."
 }
